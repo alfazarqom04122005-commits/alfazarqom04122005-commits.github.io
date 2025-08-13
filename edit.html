@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tracking WayBill</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 10px; margin: 0; background: #f9f9f9; }
+  h1 { text-align: center; margin-bottom: 20px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+  th, td { border: 1px solid #ddd; padding: 8px; text-align: left; font-size: 14px; }
+  th { background-color: #f4f4f4; }
+  button { padding: 5px 10px; cursor: pointer; border: none; background: #007bff; color: #fff; border-radius: 3px; }
+  button:hover { background: #0056b3; }
+
+  /* Modal */
+  .modal { display: none; position: fixed; z-index: 10; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
+  .modal-content { background-color: #fff; margin: 10% auto; padding: 20px; border-radius: 5px; width: 90%; max-width: 500px; }
+  .modal-content input { width: 100%; padding: 8px; margin: 5px 0; font-size: 14px; }
+  .modal-buttons { text-align: right; margin-top: 10px; }
+  .modal-buttons button { margin-left: 5px; }
+
+  /* Responsive */
+  @media (max-width: 600px) {
+    table, thead, tbody, th, td, tr { display: block; }
+    th { display: none; }
+    td { display: flex; justify-content: space-between; padding: 8px; border: 1px solid #ddd; }
+    td:before { content: attr(data-label); font-weight: bold; }
+    .action-cell { text-align: right; }
+  }
+</style>
+</head>
+<body>
+
+<h1>Tracking WayBill</h1>
+<table id="waybill-table">
+  <thead>
+    <tr id="table-headers"></tr>
+  </thead>
+  <tbody id="table-body"></tbody>
+</table>
+
+<!-- Modal -->
+<div id="edit-modal" class="modal">
+  <div class="modal-content">
+    <h2>Edit Item</h2>
+    <form id="edit-form"></form>
+    <div class="modal-buttons">
+      <button id="close-btn" type="button">Cancel</button>
+      <button id="save-btn" type="button">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const apiUrl = 'https://api.apico.dev/v1/8wOeqw/1j3Sq13q0g4qtu3n4_HNLOO6FYCyBpToZU7iAIo0yZvM/values/Sheet1';
+const token = '53900c59c103256931405574e867e315a4cd477417a016017e0480afcbd7a1d3';
+
+let headers = [];
+let rows = [];
+let currentEditIndex = null;
+
+// Fetch data
+fetch(apiUrl, {
+  method: 'GET',
+  headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+})
+.then(res => res.json())
+.then(data => {
+  headers = data.values[0];
+  rows = data.values.slice(1);
+  renderTable();
+})
+.catch(err => console.error('Error:', err));
+
+function renderTable() {
+  const headersRow = document.getElementById("table-headers");
+  headersRow.innerHTML = '';
+  headers.forEach(header => {
+    const th = document.createElement("th");
+    th.textContent = header;
+    headersRow.appendChild(th);
+  });
+  const thEdit = document.createElement("th");
+  thEdit.textContent = "Actions";
+  headersRow.appendChild(thEdit);
+
+  const tableBody = document.getElementById("table-body");
+  tableBody.innerHTML = '';
+
+  rows.forEach((row, rowIndex) => {
+    const tr = document.createElement("tr");
+    headers.forEach((header, i) => {
+      const td = document.createElement("td");
+      td.setAttribute("data-label", header);
+      td.textContent = row[i] || "";
+      tr.appendChild(td);
+    });
+    const tdAction = document.createElement("td");
+    tdAction.className = "action-cell";
+    const editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+    editBtn.addEventListener("click", () => openModal(rowIndex));
+    tdAction.appendChild(editBtn);
+    tr.appendChild(tdAction);
+
+    tableBody.appendChild(tr);
+  });
+}
+
+// Modal functions
+const modal = document.getElementById("edit-modal");
+const form = document.getElementById("edit-form");
+
+function openModal(index) {
+  currentEditIndex = index;
+  form.innerHTML = '';
+  const row = rows[index];
+  headers.forEach((header, i) => {
+    const input = document.createElement("input");
+    input.name = header;
+    input.value = row[i] || '';
+    input.placeholder = header;
+    form.appendChild(input);
+  });
+  modal.style.display = 'block';
+}
+
+document.getElementById("save-btn").addEventListener("click", () => {
+  const inputs = form.querySelectorAll("input");
+  inputs.forEach((input, i) => {
+    rows[currentEditIndex][i] = input.value;
+    const td = document.getElementById("table-body").rows[currentEditIndex].cells[i];
+    td.textContent = input.value;
+  });
+  modal.style.display = 'none';
+});
+
+document.getElementById("close-btn").addEventListener("click", () => {
+  modal.style.display = 'none';
+});
+
+window.addEventListener("click", e => {
+  if (e.target === modal) modal.style.display = 'none';
+});
+</script>
+</body>
+</html>
