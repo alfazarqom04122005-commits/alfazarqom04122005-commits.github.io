@@ -2,11 +2,11 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Kartu Pengiriman</title>
+  <title>Daftar Pengiriman</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f4f4f4;
+      background: #f9f9f9;
       padding: 20px;
     }
     .grid {
@@ -15,11 +15,11 @@
       gap: 20px;
     }
     .card {
-      background: white;
+      background: #fff;
       border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       padding: 15px;
-      width: 300px;
+      width: 320px;
       position: relative;
     }
     .card h3 {
@@ -36,51 +36,152 @@
       color: #222;
     }
     .edit-button {
-      display: inline-block;
       margin-top: 10px;
       padding: 8px 12px;
       background-color: #007bff;
       color: white;
-      text-decoration: none;
+      border: none;
       border-radius: 4px;
-      font-size: 14px;
+      cursor: pointer;
     }
     .edit-button:hover {
       background-color: #0056b3;
     }
+    .edit-form {
+      margin-top: 15px;
+      padding: 10px;
+      background: #eef;
+      border-radius: 6px;
+      display: none;
+    }
+    .edit-form input {
+      width: 100%;
+      margin-bottom: 8px;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .edit-form button {
+      padding: 8px 12px;
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .edit-form button:hover {
+      background-color: #218838;
+    }
   </style>
 </head>
 <body>
-  <h1>📦 Kartu Pengiriman</h1>
-  <div class="grid">
-    <div class="card">
-      <h3>JNT1234567890</h3>
-      <p><span class="label">Pengirim:</span> PT ABC, Andi Wijaya</p>
-      <p><span class="label">Kota Pengirim:</span> mkasaar</p>
-      <p><span class="label">Tanggal Kirim:</span> 2025-08-17</p>
-      <p><span class="label">Penerima:</span> tedong</p>
-      <p><span class="label">Status:</span> Sedang di proses</p>
-      <p><span class="label">Berat:</span> gf</p>
-      <p><span class="label">Jumlah:</span> kj</p>
-      <p><span class="label">Alamat:</span> Jl. Sudirman No.10</p>
-      <p><span class="label">Metode Pelayanan:</span> sf</p>
-      <p><span class="label">Metode Delivery:</span> jk</p>
-      <a class="edit-button" href="https://api.apico.dev/v1/Boh351/collections/689cbdd3b9b88cdac621ff87/items/689cbe14260a0e8adb788b54">Edit</a>
-    </div>
-    <div class="card">
-      <h3>JT1234567890d</h3>
-      <p><span class="label">Pengirim:</span> PT ABC, Andi Wijaya</p>
-      <p><span class="label">Kota Pengirim:</span> mkasaar</p>
-      <p><span class="label">Tanggal Kirim:</span> 2025-08-17</p>
-      <p><span class="label">Penerima:</span> tedong</p>
-      <p><span class="label">Status:</span> Sedang di proses</p>
-      <p><span class="label">Berat:</span> dggfd</p>
-      <p><span class="label">Jumlah:</span> dfggd</p>
-      <p><span class="label">Alamat:</span> Jl. Sudirman No.10</p>
-      <p><span class="label">Metode Pelayanan:</span> —</p>
-      <p><span class="label">Metode Delivery:</span> —</p>
-      <a class="edit-button" href="https://api.apico.dev/v1/Boh351/collections/689cbdd3b9b88cdac621ff87/items/689cbe149ec1712024f87f8a">Edit</a>
-    </div>
-  </div>
+  <h1>📦 Daftar Pengiriman</h1>
+  <div class="grid" id="grid"></div>
+
+  <script>
+    const token = "9746f163711d7f105f0a3271980d8040c6665d0d59beeb5987a26dbc2a2b5075";
+    const grid = document.getElementById("grid");
+
+    fetch('https://api.apico.dev/v1/Boh351/collections/689cbdd3b9b88cdac621ff87/items', {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then(response => response.json())
+    .then(data => {
+      data.items.forEach(item => {
+        const f = item.fieldData;
+        const card = document.createElement("div");
+        card.className = "card";
+        card.setAttribute("data-id", item.id);
+
+        card.innerHTML = `
+          <h3>${f.name || 'Nomor Resi'}</h3>
+          <p><span class="label">Pengirim:</span> ${f.namapengirim || '-'}</p>
+          <p><span class="label">Penerima:</span> ${f.namapenerima || '-'}</p>
+          <p><span class="label">Kota Pengirim:</span> ${f.kotapengirim || '-'}</p>
+          <p><span class="label">Alamat:</span> ${f.alamatpengiriman || '-'}</p>
+          <p><span class="label">Tanggal Kirim:</span> ${f.tanggalkirim || '-'}</p>
+          <p><span class="label">Berat:</span> ${f.berat || '-'}</p>
+          <p><span class="label">Jumlah:</span> ${f.jumlah || '-'}</p>
+          <p><span class="label">Status:</span> ${f.statuspengiriman || '-'}</p>
+          <p><span class="label">Metode Pelayanan:</span> ${f.metodepelayanan || '-'}</p>
+          <p><span class="label">Metode Delivery:</span> ${f.metodelayanandelivery || '-'}</p>
+          <p><span class="label">Keterangan:</span> ${f.keterangan || '-'}</p>
+          <p><span class="label">Slug:</span> ${f.slug || '-'}</p>
+          <button class="edit-button" onclick="toggleEditForm(this)">Edit</button>
+          <div class="edit-form">
+            <input type="text" placeholder="Keterangan" value="${f.keterangan || ''}">
+            <input type="text" placeholder="Berat" value="${f.berat || ''}">
+            <input type="text" placeholder="Nama Pengirim" value="${f.namapengirim || ''}">
+            <input type="text" placeholder="Nomor Resi" value="${f.name || ''}">
+            <input type="text" placeholder="Kota Pengirim" value="${f.kotapengirim || ''}">
+            <input type="date" placeholder="Tanggal Kirim" value="${f.tanggalkirim || ''}">
+            <input type="text" placeholder="Jumlah" value="${f.jumlah || ''}">
+            <input type="text" placeholder="Alamat Pengiriman" value="${f.alamatpengiriman || ''}">
+            <input type="text" placeholder="Metode Pelayanan" value="${f.metodepelayanan || ''}">
+            <input type="text" placeholder="Status Pengiriman" value="${f.statuspengiriman || ''}">
+            <input type="text" placeholder="Nama Penerima" value="${f.namapenerima || ''}">
+            <input type="text" placeholder="Metode Delivery" value="${f.metodelayanandelivery || ''}">
+            <input type="text" placeholder="Slug" value="${f.slug || ''}">
+            <button onclick="submitEdit(this)">Simpan & Publish</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    })
+    .catch(err => console.error(err));
+
+    function toggleEditForm(button) {
+      const form = button.nextElementSibling;
+      form.style.display = form.style.display === 'none' || form.style.display === '' ? 'block' : 'none';
+    }
+
+    function submitEdit(button) {
+      const form = button.parentElement;
+      const card = form.parentElement;
+      const id = card.getAttribute('data-id');
+      const inputs = form.querySelectorAll('input');
+
+      const fieldData = {
+        keterangan: inputs[0].value,
+        berat: inputs[1].value,
+        namapengirim: inputs[2].value,
+        name: inputs[3].value,
+        kotapengirim: inputs[4].value,
+        tanggalkirim: inputs[5].value,
+        jumlah: inputs[6].value,
+        alamatpengiriman: inputs[7].value,
+        metodepelayanan: inputs[8].value,
+        statuspengiriman: inputs[9].value,
+        namapenerima: inputs[10].value,
+        metodelayanandelivery: inputs[11].value,
+        slug: inputs[12].value
+      };
+
+      fetch(`https://api.apico.dev/v1/Boh351/collections/689cbdd3b9b88cdac621ff87/items/${id}/live`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          isArchived: false,
+          isDraft: false,
+          fieldData
+        })
+      })
+      .then(res => res.json())
+      .then(response => {
+        alert('✅ Data berhasil dipublish!');
+        form.style.display = 'none';
+      })
+      .catch(error => {
+        alert('❌ Gagal publish data.');
+        console.error(error);
+      });
+    }
+  </script>
 </body>
 </html>
