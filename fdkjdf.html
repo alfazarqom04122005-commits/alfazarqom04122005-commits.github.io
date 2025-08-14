@@ -1,83 +1,38 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tracking Resi J&T Cargo</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  /* Animasi pulse untuk status terakhir */
+  .pulse {
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%,100%{transform: scale(1);opacity:1;}
+    50%{transform: scale(1.4);opacity:0.6;}
+  }
+</style>
+</head>
 <body class="bg-gray-100 p-4">
 
 <div class="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
-  <h2 class="text-2xl font-bold mb-4 text-center">Tracking Resi J&amp;T Cargo</h2>
+  <h2 class="text-2xl font-bold mb-4 text-center">Tracking Resi J&T Cargo</h2>
 
   <form id="cekResiForm" class="flex flex-col gap-3 mb-6">
-    <input type="text" id="nomorResi" name="nomorResi" placeholder="Masukkan nomor resi" required="" class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
-    <button type="submit" class="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">Cek Resi</button>
+    <input type="text" id="nomorResi" name="nomorResi" 
+           placeholder="Masukkan nomor resi" required
+           class="border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <button type="submit"
+            class="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">Cek Resi</button>
   </form>
 
   <!-- Progress bar modern -->
-  <div id="progressBar" class="flex items-center justify-between mb-6 relative h-16">
-        <div class="flex items-center flex-1 relative">
-          <div class="flex flex-col items-center z-10">
-            <div class="w-10 h-10 rounded-full border-2 border-white bg-gray-300 shadow-md"></div>
-            <span class="text-xs mt-2 text-center font-semibold">PICK UP</span>
-          </div>
-          
-            <div class="absolute top-5 left-1/2 w-full h-1 -translate-x-1/2 bg-gray-300 rounded-full"></div>
-        </div>
-      
-        <div class="flex items-center flex-1 relative">
-          <div class="flex flex-col items-center z-10">
-            <div class="w-10 h-10 rounded-full border-2 border-white bg-gray-300 shadow-md"></div>
-            <span class="text-xs mt-2 text-center font-semibold">DALAM PERJALANAN</span>
-          </div>
-          
-            <div class="absolute top-5 left-1/2 w-full h-1 -translate-x-1/2 bg-gray-300 rounded-full"></div>
-        </div>
-      
-        <div class="flex items-center flex-1 relative">
-          <div class="flex flex-col items-center z-10">
-            <div class="w-10 h-10 rounded-full border-2 border-white bg-gray-300 shadow-md"></div>
-            <span class="text-xs mt-2 text-center font-semibold">DIKIRIM</span>
-          </div>
-          
-            <div class="absolute top-5 left-1/2 w-full h-1 -translate-x-1/2 bg-gray-300 rounded-full"></div>
-        </div>
-      
-        <div class="flex items-center flex-1 relative">
-          <div class="flex flex-col items-center z-10">
-            <div class="w-10 h-10 rounded-full border-2 border-white bg-gray-300 shadow-md"></div>
-            <span class="text-xs mt-2 text-center font-semibold">TANDA TERIMA</span>
-          </div>
-          
-        </div>
-      </div>
+  <div id="progressBar" class="flex items-center justify-between mb-6 relative h-16"></div>
 
-  <div id="hasilResi">
-      <div class="grid grid-cols-2 gap-3 mb-6 text-sm">
-        <p><span class="font-semibold">Metode Layanan:</span> FastTrack</p>
-        <p><span class="font-semibold">Berat:</span> 16 kg</p>
-        <p><span class="font-semibold">Waktu Pick Up:</span> 2024-02-27</p>
-        <p><span class="font-semibold">Volume:</span> 0.001 m³</p>
-        <p><span class="font-semibold">Waktu Pengiriman:</span> 2024-03-01</p>
-        <p><span class="font-semibold">Jumlah Koli:</span> 1</p>
-      </div>
-      <div class="mb-6 text-sm">
-        <p><span class="font-semibold">NO RESI:</span> 929393939</p>
-        <p><span class="font-semibold">ASURANSI:</span> Rp.2,100,000</p>
-        <p><span class="font-semibold">SPJ:</span> Rp.3,227,000</p>
-        <p><span class="font-semibold">PENGIRIM:</span> Suradi</p>
-        <p><span class="font-semibold">Kota Pengirim:</span> Karangnyar</p>
-        <p><span class="font-semibold">No Telp:</span> 82396682858</p>
-        <p><span class="font-semibold">PENERIMA:</span> TEDONG</p>
-        <p><span class="font-semibold">Alamat:</span> Jln Mangga,  Sudirman,  Jalan Papupa Lima</p>
-        <p><span class="font-semibold">No Telp:</span> 922872889</p>
-      </div>
-    <div class="relative border-l-2 border-gray-300 ml-2">
-        <div class="mb-6 ml-6 relative">
-          <span class="absolute -left-4 top-1 w-4 h-4 rounded-full border-2 border-white bg-green-500 pulse"></span>
-          <p class="font-semibold text-green-600">Dalam proses delivery</p>
-          <p class="text-gray-700 text-sm">Paket sudah meninggalkan SUB015A menuju GW-Surabaya</p>
-          <p class="text-gray-500 text-xs mt-1">Kota Surabaya | 2024-02-27 18:01:22</p>
-      
-          <p class="text-gray-700 text-sm"><span class="font-semibold">Status2Keterangan:</span> Sudah di ambil</p>
-          <p class="text-gray-500 text-xs"><span class="font-semibold">Status2TanggalWaktu:</span> 2024-02-27 12:56:00</p>
-          <p class="text-gray-500 text-xs"><span class="font-semibold">Status2Lokasi:</span> Kota Surabaya (SUB015A)</p>
-          <p class="text-gray-500 text-xs"><span class="font-semibold">Status2Detail:</span> Kuri J&amp;T Cargo Feri Andriansyah (82122010022) sudah ambil paket</p>
-        </div></div></div>
+  <div id="hasilResi"></div>
 </div>
 
 <script>
@@ -179,6 +134,5 @@ form.addEventListener('submit', async function(e) {
 });
 </script>
 
-
-
 </body>
+</html>
