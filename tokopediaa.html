@@ -2,241 +2,121 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edit Produk & Publish Webflow</title>
+<title>Product Editor</title>
 <style>
-/* Reset sederhana */
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  padding: 15px;
-  background-color: #f9f9f9;
-  color: #333;
-}
-
-/* Daftar produk */
-#productList div {
-  background: #fff;
-  margin-bottom: 10px;
-  padding: 12px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-#productList img {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-}
-
-#productList .info {
-  flex: 1;
-}
-
-#productList strong {
-  font-size: 16px;
-  display: block;
-}
-
-#productList small {
-  color: #666;
-}
-
-/* Tombol */
-#productList .btn {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 5px;
-  font-size: 14px;
-  text-decoration: none;
-  color: white;
-  cursor: pointer;
-}
-
-#productList .btn-edit {
-  background: #4CAF50;
-}
-
-#productList .btn-edit:hover {
-  background: #45a049;
-}
-
-#productList .btn-buka {
-  background: #2196F3;
-}
-
-#productList .btn-buka:hover {
-  background: #0b7dda;
-}
-
-#productList .actions {
-  display: flex;
-  gap: 6px;
-}
-
-/* Form edit */
-form {
-  background: #fff;
-  padding: 15px;
-  border-radius: 8px;
-  margin-top: 20px;
-}
-
-form label {
-  display: block;
-  font-weight: bold;
-  margin-top: 10px;
-  font-size: 14px;
-}
-
-form input,
-form textarea {
-  width: 100%;
-  padding: 8px;
-  margin-top: 4px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-form textarea {
-  resize: vertical;
-}
-
-form button {
-  margin-top: 15px;
-  width: 100%;
-  padding: 10px;
-  background: #2196F3;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-form button:hover {
-  background: #0b7dda;
-}
-
-/* Mobile tweaks */
-@media (max-width: 600px) {
-  body {
-    padding: 10px;
-  }
-
-  #productList div {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  #productList img {
-    width: 100%;
-    height: auto;
-  }
-
-  #productList .actions {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  #productList .btn {
-    flex: 1;
-    text-align: center;
-  }
-}
+  body { font-family: Arial, sans-serif; padding: 20px; }
+  .product { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .info { flex: 1; }
+  .actions button, .actions a { margin-left: 5px; }
+  img { max-width: 100px; }
 </style>
 </head>
 <body>
 
-<h2>Daftar Produk</h2>
-<div id="productList">Loading...</div>
+<h1>Daftar Produk</h1>
+<div id="productList"></div>
 
 <hr>
-
 <h2>Edit Produk</h2>
 <form id="editForm">
   <input type="hidden" name="myid">
 
-  <label>Nama</label>
-  <input type="text" name="name">
+  <input type="text" name="name" placeholder="Nama Produk"><br><br>
+  <input type="text" name="slug" placeholder="Slug"><br><br>
+  <textarea name="deskripsi" placeholder="Deskripsi"></textarea><br><br>
+  <input type="text" name="harga-2" placeholder="Harga"><br><br>
+  <input type="text" name="kota" placeholder="Kota"><br><br>
+  <input type="text" name="pengirim" placeholder="Pengirim"><br><br>
+  <input type="text" name="penyimpanan-internal" placeholder="Penyimpanan Internal"><br><br>
+  <input type="text" name="rintisan" placeholder="Rintisan"><br><br>
+  <input type="text" name="variant-warna" placeholder="Variant Warna"><br><br>
 
-  <label>Slug</label>
-  <input type="text" name="slug">
+  <label>Gambar 1</label><br>
+  <img id="preview-img1" src="" alt="Preview 1" style="display:none;"><br>
+  <input type="file" name="img1" accept="image/*"><br><br>
 
-  <label>Deskripsi</label>
-  <textarea name="deskripsi"></textarea>
+  <label>Gambar 2</label><br>
+  <img id="preview-img2" src="" alt="Preview 2" style="display:none;"><br>
+  <input type="file" name="img2" accept="image/*"><br><br>
 
-  <label>Harga</label>
-  <input type="text" name="harga-2">
+  <label>Gambar 3</label><br>
+  <img id="preview-img3" src="" alt="Preview 3" style="display:none;"><br>
+  <input type="file" name="img3" accept="image/*"><br><br>
 
-  <label>Kota</label>
-  <input type="text" name="kota">
-
-  <label>Pengirim</label>
-  <input type="text" name="pengirim">
-
-  <label>Penyimpanan Internal</label>
-  <input type="text" name="penyimpanan-internal">
-
-  <label>Rintisan</label>
-  <input type="text" name="rintisan">
-
-  <label>Variant Warna</label>
-  <input type="text" name="variant-warna">
-
-  <button type="submit">Update & Publish</button>
+  <button type="submit">Simpan</button>
 </form>
 
 <script>
 const API_URL = 'https://api.apico.dev/v1/BnhlNE/collections/6808c4010c2dfac0e89d885c/items';
 const APICO_TOKEN = 'Bearer 4f3f53df53fb8dcf1e35e78b5f4c763a529cdd40689ecd156210dd008e1b5562';
-
-// Token & konfigurasi Webflow
 const WEBFLOW_TOKEN = 'Bearer 5e34ea16f3f205b778a993e47d5071b8f139e028e979e91ed02454cd96344712';
 const WEBFLOW_SITE_ID = '6808b69c57532e71ea8b288c';
 const WEBFLOW_DOMAIN = 'tokopedialink.webflow.io';
 
-// --- Ambil daftar produk ---
+// Cloudinary
+const CLOUD_NAME = 'daj5cu840';
+const UPLOAD_PRESET = 'unsigned_upload';
+
+// Upload ke Cloudinary
+async function uploadToCloudinary(file) {
+  if (!file) return null;
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('upload_preset', UPLOAD_PRESET);
+  const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+    method: 'POST',
+    body: formData
+  });
+  const data = await res.json();
+  return data.secure_url || null;
+}
+
+// Preview gambar
+function previewImage(input, previewId) {
+  input.addEventListener('change', function() {
+    const file = this.files[0];
+    const preview = document.getElementById(previewId);
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}
+
+// Load produk
 async function loadProducts() {
   try {
-    const res = await fetch(API_URL, {
-      headers: { Authorization: APICO_TOKEN }
-    });
+    const res = await fetch(API_URL, { headers: { Authorization: APICO_TOKEN } });
     const data = await res.json();
-
     const container = document.getElementById('productList');
     container.innerHTML = '';
-
     data.items.forEach(item => {
       const div = document.createElement('div');
+      div.className = 'product';
       div.innerHTML = `
-        <img src="${item.fieldData?.image1?.url || 'https://via.placeholder.com/60'}" alt="Gambar">
+        <img src="${item.fieldData?.img1 || 'https://via.placeholder.com/60'}" alt="Gambar">
         <div class="info">
-          <strong>${item.fieldData.name || 'Tanpa Nama'}</strong>
+          <strong>${item.fieldData.name || 'Tanpa Nama'}</strong><br>
           <small>Rp ${item.fieldData['harga-2'] || '-'}</small>
         </div>
         <div class="actions">
-          <button class="btn btn-edit" data-id="${item.id}">Edit</button>
-          <a class="btn btn-buka" href="https://tokopediaa.co.id/link/${item.fieldData.slug || ''}" target="_blank">Buka</a>
+          <button class="btn-edit" data-id="${item.id}">Edit</button>
+          <a class="btn-buka" href="https://tokopediaa.co.id/link/${item.fieldData.slug || ''}" target="_blank">Buka</a>
         </div>
       `;
       container.appendChild(div);
-
-      // event tombol edit
-      div.querySelector('.btn-edit').addEventListener('click', () => {
-        fillForm(item);
-      });
+      div.querySelector('.btn-edit').addEventListener('click', () => fillForm(item));
     });
   } catch (err) {
     console.error('Error load products:', err);
   }
 }
 
-// --- Isi form dengan data produk ---
+// Isi form
 function fillForm(item) {
   const form = document.getElementById('editForm');
   form.elements['myid'].value = item.id;
@@ -249,48 +129,53 @@ function fillForm(item) {
   form.elements['penyimpanan-internal'].value = item.fieldData['penyimpanan-internal'] || '';
   form.elements['rintisan'].value = item.fieldData.rintisan || '';
   form.elements['variant-warna'].value = item.fieldData['variant-warna'] || '';
+
+  // Preview gambar lama
+  if (item.fieldData.img1) {
+    document.getElementById('preview-img1').src = item.fieldData.img1;
+    document.getElementById('preview-img1').style.display = 'block';
+  }
+  if (item.fieldData.img2) {
+    document.getElementById('preview-img2').src = item.fieldData.img2;
+    document.getElementById('preview-img2').style.display = 'block';
+  }
+  if (item.fieldData.img3) {
+    document.getElementById('preview-img3').src = item.fieldData.img3;
+    document.getElementById('preview-img3').style.display = 'block';
+  }
 }
 
-// --- Kirim PATCH update & publish ---
+// Submit form
 document.getElementById('editForm').addEventListener('submit', async function(e) {
   e.preventDefault();
   const formData = new FormData(e.target);
   const myid = formData.get('myid');
 
-  const bodyData = {
-    isArchived: false,
-    isDraft: false,
-    fieldData: {
-      name: formData.get('name'),
-      slug: formData.get('slug'),
-      deskripsi: formData.get('deskripsi'),
-      'harga-2': formData.get('harga-2'),
-      kota: formData.get('kota'),
-      pengirim: formData.get('pengirim'),
-      'penyimpanan-internal': formData.get('penyimpanan-internal'),
-      rintisan: formData.get('rintisan'),
-      'variant-warna': formData.get('variant-warna'),
-      image2: {
-        fileId: '689d26bdbc551d26b041e163',
-        url: 'https://cdn.prod.website-files.com/...jpeg',
-        alt: null
-      },
-      image1: {
-        fileId: '689d26bdbc551d26b041e15f',
-        url: 'https://cdn.prod.website-files.com/...jpeg',
-        alt: null
-      },
-      image3: {
-        fileId: '689d26bdbc551d26b041e15c',
-        url: 'https://cdn.prod.website-files.com/...jpeg',
-        alt: null
-      },
-      myid: myid
-    }
-  };
-
   try {
-    // 1. Update di Apico
+    const img1Url = formData.get('img1').size ? await uploadToCloudinary(formData.get('img1')) : document.getElementById('preview-img1').src;
+    const img2Url = formData.get('img2').size ? await uploadToCloudinary(formData.get('img2')) : document.getElementById('preview-img2').src;
+    const img3Url = formData.get('img3').size ? await uploadToCloudinary(formData.get('img3')) : document.getElementById('preview-img3').src;
+
+    const bodyData = {
+      isArchived: false,
+      isDraft: false,
+      fieldData: {
+        name: formData.get('name'),
+        slug: formData.get('slug'),
+        deskripsi: formData.get('deskripsi'),
+        'harga-2': formData.get('harga-2'),
+        kota: formData.get('kota'),
+        pengirim: formData.get('pengirim'),
+        'penyimpanan-internal': formData.get('penyimpanan-internal'),
+        rintisan: formData.get('rintisan'),
+        'variant-warna': formData.get('variant-warna'),
+        img1: img1Url,
+        img2: img2Url,
+        img3: img3Url,
+        myid: myid
+      }
+    };
+
     const res = await fetch(`${API_URL}/${myid}/live`, {
       method: 'PATCH',
       headers: {
@@ -299,11 +184,9 @@ document.getElementById('editForm').addEventListener('submit', async function(e)
       },
       body: JSON.stringify(bodyData)
     });
-
     const result = await res.json();
     console.log('Updated:', result);
 
-    // 2. Publish ke Webflow
     const publishRes = await fetch(`https://api.webflow.com/sites/${WEBFLOW_SITE_ID}/publish`, {
       method: 'POST',
       headers: {
@@ -311,23 +194,26 @@ document.getElementById('editForm').addEventListener('submit', async function(e)
         'Content-Type': 'application/json',
         'accept-version': '1.0.0'
       },
-      body: JSON.stringify({
-        domains: [WEBFLOW_DOMAIN]
-      })
+      body: JSON.stringify({ domains: [WEBFLOW_DOMAIN] })
     });
-
     const publishResult = await publishRes.json();
     console.log('Published:', publishResult);
 
     alert('Produk berhasil diupdate & dipublish!');
-    loadProducts(); // refresh daftar
+    loadProducts();
   } catch (err) {
     console.error('Error update/publish:', err);
   }
 });
 
-// Jalankan awal
+// Jalankan preview image
+previewImage(document.querySelector('input[name="img1"]'), 'preview-img1');
+previewImage(document.querySelector('input[name="img2"]'), 'preview-img2');
+previewImage(document.querySelector('input[name="img3"]'), 'preview-img3');
+
+// Load produk awal
 loadProducts();
 </script>
+
 </body>
 </html>
