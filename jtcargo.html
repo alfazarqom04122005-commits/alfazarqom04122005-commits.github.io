@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tracking Resi J&T Cargo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 700px;
+      margin: 30px auto;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    form {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    input[type="text"] {
+      padding: 10px;
+      width: 250px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    #tampilkanHasil {
+      display: none;
+      background-color: #fff;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    #tampilkanHasil p {
+      margin: 5px 0;
+    }
+
+    .section {
+      margin-bottom: 20px;
+    }
+
+    .sectionGrid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 20px;
+      margin-bottom: 20px;
+    }
+
+    .status-box {
+      border-left: 4px solid #4CAF50;
+      padding-left: 10px;
+      margin-bottom: 15px;
+      background-color: #f0fff0;
+    }
+
+    #notFound {
+      color: red;
+      font-weight: bold;
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    /* Flow process styling */
+    .flow-container {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    .step {
+      padding: 10px 20px;
+      color: white;
+      font-weight: bold;
+      position: relative;
+      border-radius: 5px;
+      flex-shrink: 0;
+      font-size: 14px;
+      text-align: center;
+      min-width: 110px;
+    }
+    .step.green {
+      background-color: #00994d;
+    }
+    .step.grey {
+      background-color: #c0c0c0;
+      color: #666;
+    }
+    .step:not(:last-child)::after {
+      content: '➔';
+      position: absolute;
+      right: -25px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      color: inherit;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="formResi">
+    <input type="text" id="inputResi" placeholder="Masukkan No Resi" required />
+    <button type="submit">Cek Resi</button>
+  </form>
+
+  <div id="tampilkanHasil">
+    <!-- Flow process di sini, di atas semua section -->
+    <div class="flow-container">
+      <div class="step green">PICK UP</div>
+      <div class="step green">DALAM PERJALANAN</div>
+      <div class="step green">DIKIRIM</div>
+      <div class="step grey">TANDA TERIMA</div>
+    </div>
+
+    <div class="sectionGrid">
+      <p><strong>Metode Layanan:</strong> <span id="MetodeLayanan"></span></p>
+      <p><strong>Berat:</strong> <span id="Berat_kg"></span> kg</p>
+      <p><strong>Volume:</strong> <span id="Volume_m3"></span> m³</p>
+      <p><strong>Jumlah Koli:</strong> <span id="JumlahKoli"></span></p>
+      <p><strong>Waktu Pick Up:</strong> <span id="WaktuPickUp"></span></p>
+      <p><strong>Waktu Pengiriman:</strong> <span id="WaktuPengiriman"></span></p>
+    </div>
+
+    <div class="section">
+      <p><strong>NO RESI:</strong> <span id="NoResi"></span></p>
+      <p><strong>ASURANSI:</strong> <span id="Asuransi"></span></p>
+      <p><strong>SPJ:</strong> <span id="SPJ"></span></p>
+    </div>
+
+    <div class="section">
+      <p><strong>PENGIRIM:</strong> <span id="PengirimNama"></span></p>
+      <p><strong>Kota Pengirim:</strong> <span id="PengirimKota"></span></p>
+      <p><strong>No Telp:</strong> <span id="PengirimNoTelp"></span></p>
+    </div>
+
+    <div class="section">
+      <p><strong>PENERIMA:</strong> <span id="PenerimaNama"></span></p>
+      <p><strong>Alamat:</strong> <span id="PenerimaAlamat"></span></p>
+      <p><strong>No Telp:</strong> <span id="PenerimaNoTelp"></span></p>
+    </div>
+
+    <div class="section">
+      <h4>Status Pengiriman</h4>
+      <div class="status-box">
+        <p><strong><span id="Status"></span></strong></p>
+        <p><span id="TanggalWaktu"></span></p>
+        <p><span id="Lokasi"></span></p>
+        <p><span id="Detail"></span></p>
+      </div>
+
+      <div class="status-box">
+        <p><strong><span id="Status2"></span></strong></p>
+        <p><span id="TanggalWaktu2"></span></p>
+        <p><span id="Lokasi2"></span></p>
+        <p><span id="Detail2"></span></p>
+      </div>
+    </div>
+  </div>
+
+  <p id="notFound">No Resi tidak ditemukan.</p>
+
+  <script>
+    document.getElementById('formResi').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const noResiInput = document.getElementById('inputResi').value.trim();
+      cariResi(noResiInput);
+    });
+
+    async function cariResi(noResiInput) {
+      const url = 'https://opensheet.elk.sh/1j3Sq13q0g4qtu3n4_HNLOO6FYCyBpToZU7iAIo0yZvM/jntcargo';
+
+      try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        const hasil = data.find(item => item.NoResi === noResiInput);
+
+        if (hasil) {
+          document.getElementById('notFound').style.display = 'none';
+          document.getElementById('tampilkanHasil').style.display = 'block';
+
+          // Replace tabs with commas in alamat
+          if (hasil.PenerimaAlamat) {
+            hasil.PenerimaAlamat = hasil.PenerimaAlamat.replace(/\t/g, ', ');
+          }
+
+          for (const key in hasil) {
+            const el = document.getElementById(key);
+            if (el) el.textContent = hasil[key];
+          }
+        } else {
+          document.getElementById('notFound').style.display = 'block';
+          document.getElementById('tampilkanHasil').style.display = 'none';
+          kosongkanField();
+        }
+
+      } catch (error) {
+        console.error("Gagal mengambil data:", error);
+        alert("Terjadi kesalahan saat mengambil data.");
+      }
+    }
+
+    function kosongkanField() {
+      const fieldIds = [
+        "NoResi", "Asuransi", "SPJ", "PengirimNama", "PengirimKota", "PengirimNoTelp",
+        "PenerimaNama", "PenerimaAlamat", "PenerimaNoTelp", "MetodeLayanan", "Berat_kg",
+        "Volume_m3", "JumlahKoli", "WaktuPickUp", "WaktuPengiriman", "Status",
+        "TanggalWaktu", "Lokasi", "Detail", "Status2", "TanggalWaktu2", "Lokasi2", "Detail2"
+      ];
+      fieldIds.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = "";
+      });
+    }
+  </script>
+
+</body>
+</html>
