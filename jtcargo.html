@@ -3,13 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tracking Resi J&T Cargo</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       max-width: 700px;
-      margin: 30px auto;
-      padding: 20px;
+      margin: 10px auto;
+      padding: 4px;
       background-color: #f9f9f9;
     }
 
@@ -21,6 +20,9 @@
     form {
       text-align: center;
       margin-bottom: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
     }
 
     input[type="text"] {
@@ -28,20 +30,26 @@
       width: 250px;
       border: 1px solid #ccc;
       border-radius: 4px;
+      font-size: 14px;
     }
 
     button {
-      padding: 10px 20px;
       background-color: #4CAF50;
       border: none;
-      color: white;
       border-radius: 4px;
       cursor: pointer;
-      margin-left: 10px;
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
-
     button:hover {
       background-color: #45a049;
+    }
+    button svg {
+      fill: white;
+      width: 18px;
+      height: 18px;
     }
 
     #tampilkanHasil {
@@ -82,59 +90,102 @@
       margin-top: 20px;
     }
 
-    /* Flow process styling */
+    /* Flow process styling with arrow shapes */
     .flow-container {
       display: flex;
-      gap: 10px;
-      align-items: center;
       overflow-x: auto;
-      white-space: nowrap;
-      padding-bottom: 10px;
+      gap: 0;
       margin-bottom: 20px;
     }
-    .step {
-      padding: 10px 20px;
-      color: white;
-      font-weight: bold;
+    .arrow.steps {
       position: relative;
-      border-radius: 5px;
-      flex-shrink: 0;
-      font-size: 14px;
-      text-align: center;
-      min-width: 110px;
-    }
-    .step.green {
       background-color: #00994d;
+      color: white;
+      padding: 15px 40px 15px 20px;
+      font-weight: bold;
+      flex-shrink: 0;
+      cursor: default;
+      font-size: 12px;
+      clip-path: polygon(
+        0 0,
+        calc(100% - 20px) 0,
+        100% 50%,
+        calc(100% - 20px) 100%,
+        0 100%,
+        20px 50%
+      );
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
     }
-    .step.grey {
+    .arrow.steps:last-child {
+      margin-right: 0;
+      clip-path: polygon(
+        0 0,
+        100% 0,
+        100% 100%,
+        0 100%,
+        20px 50%
+      );
+    }
+
+    .grey {
       background-color: #c0c0c0;
       color: #666;
+      padding: 15px 40px 15px 20px;
+      font-weight: bold;
+      flex-shrink: 0;
+      position: relative;
+      font-size: 12px;
+      clip-path: polygon(
+        0 0,
+        calc(100% - 20px) 0,
+        100% 50%,
+        calc(100% - 20px) 100%,
+        0 100%,
+        20px 50%
+      );
+      margin-right: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      white-space: nowrap;
     }
-    .step:not(:last-child)::after {
-      content: '➔';
-      position: absolute;
-      right: -25px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 24px;
-      color: inherit;
+    .grey:last-child {
+      margin-right: 0;
+      clip-path: polygon(
+        0 0,
+        100% 0,
+        100% 100%,
+        0 100%,
+        20px 50%
+      );
     }
   </style>
 </head>
 <body>
 
+  <h2>Cek Resi J&T Cargo</h2>
+
   <form id="formResi">
     <input type="text" id="inputResi" placeholder="Masukkan No Resi" required />
-    <button type="submit">Cek Resi</button>
+    <button type="submit" aria-label="Cari resi">
+      <!-- Search icon SVG -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" >
+        <path d="M15.5 14h-.79l-.28-.27a6.471 6.471 0 001.48-5.34C15.15 5.53 12.62 3 9.5 3S3.85 5.53 3.85 8.39 6.38 13.78 9.5 13.78c1.61 0 3.09-.66 4.16-1.73l.27.28v.79l5 4.99L20.49 19l-4.99-5zM9.5 12c-1.93 0-3.5-1.57-3.5-3.5S7.57 5 9.5 5 13 6.57 13 8.5 11.43 12 9.5 12z"/>
+      </svg>
+    </button>
   </form>
 
   <div id="tampilkanHasil">
     <!-- Flow process di sini, di atas semua section -->
     <div class="flow-container">
-      <div class="step green">PICK UP</div>
-      <div class="step green">DALAM PERJALANAN</div>
-      <div class="step green">DIKIRIM</div>
-      <div class="step grey">TANDA TERIMA</div>
+      <div class="arrow steps">PICK UP</div>
+      <div class="arrow steps">DALAM PERJALANAN</div>
+      <div class="arrow steps">DIKIRIM</div>
+      <div class="grey">TANDA TERIMA</div>
     </div>
 
     <div class="sectionGrid">
@@ -204,7 +255,6 @@
           document.getElementById('notFound').style.display = 'none';
           document.getElementById('tampilkanHasil').style.display = 'block';
 
-          // Replace tabs with commas in alamat
           if (hasil.PenerimaAlamat) {
             hasil.PenerimaAlamat = hasil.PenerimaAlamat.replace(/\t/g, ', ');
           }
